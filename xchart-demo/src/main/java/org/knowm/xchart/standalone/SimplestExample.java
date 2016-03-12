@@ -1,6 +1,5 @@
 /**
- * Copyright 2015-2016 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2011-2015 Xeiam LLC (http://xeiam.com) and contributors.
+ * Copyright 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +15,35 @@
  */
 package org.knowm.xchart.standalone;
 
-import org.knowm.xchart.Chart_XY;
+import java.io.IOException;
+
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.internal.chartpart.Chart;
 
 /**
- * Creates a simple Chart using QuickChart
+ * @author timmolter
  */
-public class Example0 {
+public class SimplestExample {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws IOException {
 
     double[] xData = new double[] { 0.0, 1.0, 2.0 };
     double[] yData = new double[] { 2.0, 1.0, 0.0 };
 
     // Create Chart
-    Chart_XY chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
+    Chart chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
 
     // Show it
     new SwingWrapper(chart).displayChart();
 
+    // Save it
+    BitmapEncoder.saveBitmap(chart, "./Sample_Chart", BitmapFormat.PNG);
+
+    // or save it in high-res
+    BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.PNG, 300);
   }
+
 }

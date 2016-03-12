@@ -16,15 +16,12 @@
  */
 package org.knowm.xchart.demo.charts.theme;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.knowm.xchart.ChartBuilder_XY;
 import org.knowm.xchart.Chart_XY;
+import org.knowm.xchart.Series_XY;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.demo.charts.ExampleChart;
 import org.knowm.xchart.internal.chartpart.Chart;
@@ -37,7 +34,7 @@ import org.knowm.xchart.internal.style.Styler.ChartTheme;
  * <ul>
  * <li>Building a Chart with ChartBuilder
  * <li>Applying the Matlab Theme to the Chart
- * <li>Vertical and Horizontal Lines
+ * <li>Generating Gaussian Bell Curve Data
  */
 public class ThemeChart03 implements ExampleChart {
 
@@ -59,57 +56,32 @@ public class ThemeChart03 implements ExampleChart {
     chart.getStyler().setXAxisTickMarkSpacingHint(100);
 
     // Series
-    List<Date> xData = new ArrayList<Date>();
-    List<Double> y1Data = new ArrayList<Double>();
-    List<Double> y2Data = new ArrayList<Double>();
-
-    DateFormat sdf = new SimpleDateFormat("yyyy-MM");
-
-    Date date;
-    try {
-      date = sdf.parse("2012-08");
-      xData.add(date);
-      y1Data.add(120d);
-      y2Data.add(15d);
-
-      date = sdf.parse("2012-11");
-      xData.add(date);
-      y1Data.add(165d);
-      y2Data.add(15d);
-
-      date = sdf.parse("2013-01");
-      xData.add(date);
-      y1Data.add(210d);
-      y2Data.add(20d);
-
-      date = sdf.parse("2013-02");
-      xData.add(date);
-      y1Data.add(400d);
-      y2Data.add(30d);
-
-      date = sdf.parse("2013-03");
-      xData.add(date);
-      y1Data.add(800d);
-      y2Data.add(100d);
-
-      date = sdf.parse("2013-04");
-      xData.add(date);
-      y1Data.add(2000d);
-      y2Data.add(120d);
-
-      date = sdf.parse("2013-05");
-      xData.add(date);
-      y1Data.add(3000d);
-      y2Data.add(150d);
-
-    } catch (ParseException e) {
-      e.printStackTrace();
+    List<Integer> xData = new ArrayList<Integer>();
+    for (int i = 0; i < 640; i++) {
+      xData.add(i);
+    }
+    List<Double> y1Data = getYAxis(xData, 320, 160);
+    List<Double> y2Data = getYAxis(xData, 320, 320);
+    List<Double> y3Data = new ArrayList<Double>(xData.size());
+    for (int i = 0; i < 640; i++) {
+      y3Data.add(y1Data.get(i) - y2Data.get(i));
     }
 
-    chart.addSeries("downloads", xData, y1Data);
-    chart.addSeries("price", xData, y2Data);
+    Series_XY series = chart.addSeries("Gaussian 1", xData, y1Data);
+    chart.addSeries("Gaussian 2", xData, y2Data);
+    chart.addSeries("Difference", xData, y3Data);
 
     return chart;
+  }
+
+  private List<Double> getYAxis(List<Integer> xData, double mean, double std) {
+
+    List<Double> yData = new ArrayList<Double>(xData.size());
+
+    for (int i = 0; i < xData.size(); i++) {
+      yData.add((1 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-(((xData.get(i) - mean) * (xData.get(i) - mean)) / ((2 * std * std)))));
+    }
+    return yData;
   }
 
 }

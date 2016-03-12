@@ -69,7 +69,7 @@ public class Legend_AxesChart<ST extends Styler_AxesChart, S extends Series> ext
     Map<String, Series_AxesChart> map = chart.getSeriesMap();
     for (Series_AxesChart series : map.values()) {
 
-      if (series.isShowInLegend()) {
+      if (!series.isShowInLegend()) {
         continue;
       }
 
@@ -105,7 +105,7 @@ public class Legend_AxesChart<ST extends Styler_AxesChart, S extends Series> ext
         // g.draw(boundsTemp);
 
         // paint marker
-        if (series.getMarker() != null) {
+        if ((stylerAxesChart.shouldShowMarkers() || series.getLegendRenderType() == LegendRenderType.Scatter) && series.getMarker() != null) {
           g.setColor(series.getMarkerColor());
           series.getMarker().paint(g, startx + chart.getStyler().getLegendSeriesLineLength() / 2.0, starty + legendEntryHeight / 2.0, stylerAxesChart.getMarkerSize());
 
